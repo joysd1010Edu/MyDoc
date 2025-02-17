@@ -4,14 +4,46 @@ import StarterKit from "@tiptap/starter-kit";
 import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableHeader from "@tiptap/extension-table-header";
+import { Color } from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight'
 import TableCell from "@tiptap/extension-table-cell";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Image from "@tiptap/extension-image";
-import ImageResize from 'tiptap-extension-resize-image';
+import FontFamily from '@tiptap/extension-font-family'
+import Underline from "@tiptap/extension-underline";
+import ImageResize from "tiptap-extension-resize-image";
+import { useEditorState } from "@/Store/useEditorStore";
+import TextStyle from "@tiptap/extension-text-style";
 
 const Editor = () => {
+  const { setEditor } = useEditorState();
   const editor = useEditor({
+    onCreate: ({ editor }) => {
+      setEditor(editor);
+    },
+    onDestroy: () => {
+      setEditor(null);
+    },
+    onUpdate: ({ editor }) => {
+      setEditor(editor);
+    
+    },
+    onSelectionUpdate: ({ editor }) => {
+      setEditor(editor);
+    },
+    onTransaction: ({ editor }) => {
+      setEditor(editor);
+    },
+    onFocus: ({ editor }) => {
+      setEditor(editor);
+    },
+    onBlur: ({ editor }) => {
+      setEditor(editor);
+    },
+    onContentError: ({ editor }) => {
+      setEditor(editor);
+    },
     editorProps: {
       attributes: {
         style: "padding-left: 56px; padding-right: 56px",
@@ -21,7 +53,9 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
-      Table,
+      FontFamily,
+      TextStyle,Color , Highlight.configure({multicolor:true}),
+      Table,Underline,
       TableRow,
       TableHeader,
       ImageResize,
@@ -33,9 +67,12 @@ const Editor = () => {
       }),
     ],
     content: `
-        <p>This is a basic example of implementing images. Drag to re-order.</p>
-        <img src="https://images.squarespace-cdn.com/content/v1/61c4da8eb1b30a201b9669f2/e2e0e62f-0064-4f86-b9d8-5a55cb7110ca/Korembi-January-2024.jpg?format=750w" />
-        <img src="https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_640.jpg" />
+       
+       <h1>This is a 1st level heading</h1>
+        <h2>This is a 2nd level heading</h2>
+        <h3>This is a 3rd level heading</h3>
+        <h4>This 4th level heading will be converted to a paragraph, because levels are configured to be only 1, 2 or 3.</h4>
+        
       `,
   });
 
