@@ -14,6 +14,8 @@ import {
   ImageIcon,
   ItalicIcon,
   Link2Icon,
+  ListIcon,
+  ListOrderedIcon,
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlus,
@@ -43,8 +45,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { text } from "stream/consumers";
-// import ImageBtn from "./ImageBtn";
 
 interface ToolBarProps {
   onclick: () => void;
@@ -114,6 +114,58 @@ const ImageBtn = () => {
 };
 
 //------------------------------align Button-------------------------------------
+const ListBtn = () => {
+  const { editor } = useEditorState();
+
+  const lists = [
+    {
+      label: "Bullet List",
+      onclick: () => editor?.chain().focus().toggleBulletList().run(),
+      icon: ListIcon,
+      isActive: () => editor?.isActive("bulletList"),
+    },
+    {
+      label: "Ordered List",
+      onclick: () => editor?.chain().focus().toggleOrderedList().run(),
+      icon: ListOrderedIcon,
+      isActive: () => editor?.isActive("orderedList"),
+    },
+  ];
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <DropdownMenu>
+        <Tooltip>
+          <DropdownMenuTrigger asChild>
+            <TooltipTrigger asChild>
+              <button className="shrink-0 flex flex-col items-center rounded-sm p-1 hover:bg-neutral-200/80 px-1 overflow-hidden">
+                <ListIcon className="size-5" />
+              </button>
+            </TooltipTrigger>
+          </DropdownMenuTrigger>
+          <TooltipContent side="top">Text Listing</TooltipContent>
+        </Tooltip>
+
+        <DropdownMenuContent className="p-1.5 flex flex-col rounded-sm ">
+          {lists.map(({ label, onclick, icon: Icon, isActive }) => (
+            <button
+              key={label}
+              onClick={onclick}
+              className={cn(
+                "flex items-center py-1 px-2 gap-x-2 rounded-sm hover:bg-neutral-200/80",
+                isActive() && "bg-neutral-200/80"
+              )}
+            >
+              <Icon className="size-4" />
+              <span className=" text-sm"> {label}</span>
+            </button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TooltipProvider>
+  );
+};
+//------------------------------align Button-------------------------------------
 const AlignBtn = () => {
   const { editor } = useEditorState();
 
@@ -139,21 +191,21 @@ const AlignBtn = () => {
         </Tooltip>
 
         <DropdownMenuContent className="p-1.5 flex flex-col rounded-sm ">
-         {
-        
-        alignments.map(({ label, value, icon: Icon }) => ( 
-          <button
-            key={value}
-            onClick={() => {
-              editor?.chain().focus().setTextAlign(value).run();
-            }}
-            className={cn("flex items-center py-1 px-2 gap-x-2 rounded-sm hover:bg-neutral-200/80",editor?.isActive({textAlign:value}) && "bg-neutral-200/80")}>
-              <Icon className='size-4'/>
+          {alignments.map(({ label, value, icon: Icon }) => (
+            <button
+              key={value}
+              onClick={() => {
+                editor?.chain().focus().setTextAlign(value).run();
+              }}
+              className={cn(
+                "flex items-center py-1 px-2 gap-x-2 rounded-sm hover:bg-neutral-200/80",
+                editor?.isActive({ textAlign: value }) && "bg-neutral-200/80"
+              )}
+            >
+              <Icon className="size-4" />
               <span className=" text-sm"> {label}</span>
-
             </button>
-         )) }
-
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </TooltipProvider>
@@ -228,7 +280,12 @@ const HighLightColor = () => {
         </Tooltip>
 
         <DropdownMenuContent className="p-0">
-          <SketchPicker color={value} onChange={onChange} disableAlpha className=""/>
+          <SketchPicker
+            color={value}
+            onChange={onChange}
+            disableAlpha
+            className=""
+          />
         </DropdownMenuContent>
       </DropdownMenu>
     </TooltipProvider>
@@ -581,7 +638,8 @@ const ToolBar = () => {
       {/* --------------------Alignment Implementation-------------------*/}
       <AlignBtn />
 
-      {/* TODO: List */}
+      {/* ---------------------- List ----------------------------------*/}
+      <ListBtn />
       <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
       {/* TODO: Line height */}
       <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
