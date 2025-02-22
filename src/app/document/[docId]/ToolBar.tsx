@@ -59,34 +59,56 @@ interface ToolBarProps {
 const ImageBtn = () => {
   const { editor } = useEditorState();
   const [url, setUrl] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const onChange = (src: string) => {
-    console.log("Image URL:", src);
-    if (editor) {
-      console.log("Editor is focused:", editor.isFocused);
-      editor
-        .chain()
-        .focus() // Ensure the editor retains focus
-        .setImage({ src })
-        .run();
-      console.log("Editor is focused after insertion:", editor.isFocused);
+  const validateAndInsertImage = async (src: string) => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(src);
+      const contentType = response.headers.get("content-type");
+
+      if (!contentType?.startsWith("image/")) {
+        setError("Invalid image URL. Please provide a valid image link.");
+        return;
+      }
+
+      editor?.chain().focus().setImage({ src }).run();
+      setUrl("");
+      
+    } catch (err) {
+      setError("Failed to load image. Please check the URL and try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const Upload = () => {
-    console.log("Upload clicked, isOpen:", isOpen, "URL:", url);
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
+        if (!file.type.startsWith("image/")) {
+          setError("Please select a valid image file.");
+          return;
+        }
         const imgUrl = URL.createObjectURL(file);
-        onChange(imgUrl);
+        await validateAndInsertImage(imgUrl);
       }
     };
     input.click();
+  };
+
+  const insertImageFromUrl = async () => {
+    if (!url) {
+      setError("Please enter an image URL");
+      return;
+    }
+    await validateAndInsertImage(url);
   };
 
   return (
@@ -102,11 +124,38 @@ const ImageBtn = () => {
           </DropdownMenuTrigger>
           <TooltipContent side="top">Image Insertion</TooltipContent>
         </Tooltip>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-80">
           <DropdownMenuItem onClick={Upload}>
             <UploadIcon className="size-4 mx-2" />
             Upload Image
           </DropdownMenuItem>
+          <div className="p-2 flex flex-col gap-2">
+            <Input
+              placeholder="Paste image URL"
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value);
+                setError("");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  insertImageFromUrl();
+                }
+              }}
+            />
+            {error && (
+              <p className="text-xs text-red-500 px-1">
+                {error}
+              </p>
+            )}
+            <Button 
+              onClick={insertImageFromUrl}
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? "Loading..." : "Insert Image"}
+            </Button>
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
     </TooltipProvider>
