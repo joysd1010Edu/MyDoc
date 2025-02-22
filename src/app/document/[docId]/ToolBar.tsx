@@ -138,7 +138,7 @@ const AlignBtn = () => {
           <TooltipContent side="top">Text Alignment</TooltipContent>
         </Tooltip>
 
-        <DropdownMenuContent className="p-0">
+        <DropdownMenuContent className="p-1.5 flex flex-col rounded-sm ">
          {
         
         alignments.map(({ label, value, icon: Icon }) => ( 
@@ -147,8 +147,8 @@ const AlignBtn = () => {
             onClick={() => {
               editor?.chain().focus().setTextAlign(value).run();
             }}
-            className={cn("flex items-center p-2 gap-x-2 rounded-sm hover:bg-neutral-200/80",editor?.isActive({textAlign:value}) && "bg-neutral-200/80")}>
-              <Icon className='4'/>
+            className={cn("flex items-center py-1 px-2 gap-x-2 rounded-sm hover:bg-neutral-200/80",editor?.isActive({textAlign:value}) && "bg-neutral-200/80")}>
+              <Icon className='size-4'/>
               <span className=" text-sm"> {label}</span>
 
             </button>
