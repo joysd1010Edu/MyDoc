@@ -4,17 +4,19 @@ import StarterKit from "@tiptap/starter-kit";
 import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableHeader from "@tiptap/extension-table-header";
-import { Color } from '@tiptap/extension-color';
-import Highlight from '@tiptap/extension-highlight'
+import { Color } from "@tiptap/extension-color";
+import Highlight from "@tiptap/extension-highlight";
 import TableCell from "@tiptap/extension-table-cell";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Image from "@tiptap/extension-image";
-import FontFamily from '@tiptap/extension-font-family'
+import FontFamily from "@tiptap/extension-font-family";
 import Underline from "@tiptap/extension-underline";
 import ImageResize from "tiptap-extension-resize-image";
 import { useEditorState } from "@/Store/useEditorStore";
 import TextStyle from "@tiptap/extension-text-style";
+import Link from "@tiptap/extension-link";
+import TextAlign from '@tiptap/extension-text-align'
 
 const Editor = () => {
   const { setEditor } = useEditorState();
@@ -27,7 +29,6 @@ const Editor = () => {
     },
     onUpdate: ({ editor }) => {
       setEditor(editor);
-    
     },
     onSelectionUpdate: ({ editor }) => {
       setEditor(editor);
@@ -53,9 +54,21 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      Link.configure({
+        defaultProtocol: "https",
+        openOnClick: false,
+        HTMLAttributes: {
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+        autolink: true,
+      }),
       FontFamily,
-      TextStyle,Color , Highlight.configure({multicolor:true}),
-      Table,Underline,
+      TextStyle,TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Color,
+      Highlight.configure({ multicolor: true }),
+      Table,
+      Underline,
       TableRow,
       TableHeader,
       ImageResize,
