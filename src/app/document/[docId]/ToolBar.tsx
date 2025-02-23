@@ -14,11 +14,14 @@ import {
   ImageIcon,
   ItalicIcon,
   Link2Icon,
+  ListCollapseIcon,
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlus,
+  MinusIcon,
+  PlusIcon,
   PrinterIcon,
   Redo2Icon,
   RemoveFormattingIcon,
@@ -54,6 +57,145 @@ interface ToolBarProps {
 }
 
 // -------------------------------------------Tool bar components----------------------------------------------------
+//------------------------------align Button-------------------------------------
+const LineHeight = () => {
+  const { editor } = useEditorState();
+
+  const LineHeights = [
+    { label: "default", value: "normal" },
+    { label: "Single", value: "1" },
+    { label: "1.15", value: "1.15" },
+    { label: "1.5", value: "1.5" },
+    { label: "Double", value: "2" },
+  ];
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <DropdownMenu>
+        <Tooltip>
+          <DropdownMenuTrigger asChild>
+            <TooltipTrigger asChild>
+              <button className="shrink-0 flex flex-col items-center rounded-sm p-1 hover:bg-neutral-200/80 px-1 overflow-hidden">
+                <ListCollapseIcon className="size-5" />
+              </button>
+            </TooltipTrigger>
+          </DropdownMenuTrigger>
+          <TooltipContent side="top">Line Height</TooltipContent>
+        </Tooltip>
+
+        <DropdownMenuContent className="p-1.5 flex flex-col rounded-sm ">
+          {LineHeights.map(({ label, value }) => (
+            <button
+              key={value}
+              onClick={() => {
+                editor?.chain().focus().setLineHeight(value).run();
+              }}
+              className={cn(
+                "flex items-center py-1 px-1 gap-x-2 rounded-sm hover:bg-neutral-200/80",
+                editor?.getAttributes("paragraph").lineHight === value &&
+                  "bg-neutral-200/80"
+              )}
+            >
+             
+              <span className=" text-sm"> {label}</span>
+            </button>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TooltipProvider>
+  );
+};
+
+// ------------------------------Font Size Button-------------------------------------
+const FontSizeBtn = () => {
+  const { editor } = useEditorState();
+  const CurrentFontSize = editor?.getAttributes("textStyle").fontSize
+    ? editor?.getAttributes("textStyle").fontSize.replace("", "")
+    : "16px";
+  const [fontSize, setFontSize] = useState(CurrentFontSize);
+  const [inputValue, setInputValue] = useState(fontSize);
+  const [Editing, setEditing] = useState(false);
+  const updateFontSize = (newSize: string) => {
+    const size = parseInt(newSize);
+    if (!isNaN(size) && size > 0) {
+      setFontSize(newSize);
+      editor?.chain().focus().setFontSize(`${size}px`).run();
+      setFontSize(newSize);
+      setInputValue(newSize);
+      setEditing(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      updateFontSize(inputValue);
+      editor?.commands.focus();
+    }
+  };
+  const handleInputBlur = () => {
+    updateFontSize(inputValue);
+  };
+
+  const incrementFontSize = () => {
+    const size = parseInt(fontSize) + 1;
+    updateFontSize(size.toString());
+  };
+  const DecrementFontSize = () => {
+    const size = parseInt(fontSize) - 1;
+    if (size > 0) {
+      updateFontSize(size.toString());
+    }
+  };
+
+  return (
+    <TooltipProvider delayDuration={200}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={DecrementFontSize}
+              className="shrink-0 flex h-7 w-7 items-center rounded-sm p-1 hover:bg-neutral-200/80 px-1 "
+            >
+              <MinusIcon className=" size-4" />
+            </button>
+            {Editing ? (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                onKeyDown={handleKeyDown}
+                className="shrink-0  border-2 border-neutral-400 text-center h-7 w-10  rounded-sm text-sm bg-transparent focus:ring-0 px-1 focus:outline-none"
+              />
+            ) : (
+              <button
+                onClick={() => {
+                  setEditing(true);
+                  setFontSize(CurrentFontSize);
+                }}
+                className="shrink-0  border-2 border-neutral-400 text-center h-7 w-10  rounded-sm text-sm bg-transparent hover:cursor-text px-1 "
+              >
+                {CurrentFontSize}
+              </button>
+            )}
+            <button
+              onClick={incrementFontSize}
+              className="shrink-0 flex h-7 w-7 items-center rounded-sm p-1 hover:bg-neutral-200/80 px-1 "
+            >
+              <PlusIcon className=" size-4" />
+            </button>
+          </div>
+        </TooltipTrigger>
+
+        <TooltipContent side="top">Font Size</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
 
 //------------------------------Image Button-------------------------------------
 const ImageBtn = () => {
@@ -77,7 +219,6 @@ const ImageBtn = () => {
 
       editor?.chain().focus().setImage({ src }).run();
       setUrl("");
-      
     } catch (err) {
       setError("Failed to load image. Please check the URL and try again.");
     } finally {
@@ -143,12 +284,8 @@ const ImageBtn = () => {
                 }
               }}
             />
-            {error && (
-              <p className="text-xs text-red-500 px-1">
-                {error}
-              </p>
-            )}
-            <Button 
+            {error && <p className="text-xs text-red-500 px-1">{error}</p>}
+            <Button
               onClick={insertImageFromUrl}
               disabled={isLoading}
               className="w-full"
@@ -162,7 +299,7 @@ const ImageBtn = () => {
   );
 };
 
-//------------------------------align Button-------------------------------------
+//------------------------------List Button-------------------------------------
 const ListBtn = () => {
   const { editor } = useEditorState();
 
@@ -214,6 +351,7 @@ const ListBtn = () => {
     </TooltipProvider>
   );
 };
+
 //------------------------------align Button-------------------------------------
 const AlignBtn = () => {
   const { editor } = useEditorState();
@@ -667,10 +805,11 @@ const ToolBar = () => {
       {/* -----------------Heading Level Button Implementation--------------- */}
       <HeadingLevelButton />
       <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
-      {/* TODO: font size */}
+      {/* ------------------------ font size -------------------------*/}
+      <FontSizeBtn />
       <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
 
-      {/* ---------------- Tool Bar Buttons Implementation------------------- */}
+      {/* ---------------- Tool Bar Buttons Implementation-------------- */}
       {sections[1].map((button, buttonIndex) => (
         <ToolBarButton key={buttonIndex} {...button} />
       ))}
@@ -689,8 +828,9 @@ const ToolBar = () => {
 
       {/* ---------------------- List ----------------------------------*/}
       <ListBtn />
-      <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
-      {/* TODO: Line height */}
+
+      {/* =----------------- Line height------------------------ */}
+      <LineHeight />
       <Separator orientation="vertical" className=" h-6 bg-neutral-400" />
       {sections[2].map((button, buttonIndex) => (
         <ToolBarButton key={buttonIndex} {...button} />

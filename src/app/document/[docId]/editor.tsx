@@ -16,7 +16,9 @@ import ImageResize from "tiptap-extension-resize-image";
 import { useEditorState } from "@/Store/useEditorStore";
 import TextStyle from "@tiptap/extension-text-style";
 import Link from "@tiptap/extension-link";
-import TextAlign from '@tiptap/extension-text-align'
+import TextAlign from "@tiptap/extension-text-align";
+import { FontSize } from "@/extensions/Font-Size";
+import { LineHeight } from "@/extensions/lineHight";
 
 const Editor = () => {
   const { setEditor } = useEditorState();
@@ -54,6 +56,11 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      FontSize,
+      LineHeight.configure({
+        types: ["heading", "paragraph"],
+        defaultLineHeight: "normal",
+      }),
       Link.configure({
         defaultProtocol: "https",
         openOnClick: false,
@@ -64,7 +71,8 @@ const Editor = () => {
         autolink: true,
       }),
       FontFamily,
-      TextStyle,TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TextStyle,
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       Color,
       Highlight.configure({ multicolor: true }),
       Table,
