@@ -48,11 +48,14 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { TbLineHeight } from "react-icons/tb";
+import { FaBold } from "react-icons/fa";
+import { IconType } from "react-icons";
 
 interface ToolBarProps {
   onclick: () => void;
   isActive?: boolean;
-  icon: LucideIcon;
+  icon: LucideIcon|IconType;
   label: string;
 }
 
@@ -76,7 +79,7 @@ const LineHeight = () => {
           <DropdownMenuTrigger asChild>
             <TooltipTrigger asChild>
               <button className="shrink-0 flex flex-col items-center rounded-sm p-1 hover:bg-neutral-200/80 px-1 overflow-hidden">
-                <ListCollapseIcon className="size-5" />
+                <TbLineHeight className="size-5" />
               </button>
             </TooltipTrigger>
           </DropdownMenuTrigger>
@@ -739,7 +742,7 @@ const ToolBar = () => {
     [
       {
         label: "Bold",
-        icon: BoldIcon,
+        icon: FaBold,
         isActive: editor?.isActive("bold"),
         onclick: () => {
           editor?.chain().focus().toggleBold().run();
@@ -791,7 +794,7 @@ const ToolBar = () => {
   ];
 
   return (
-    <div className="bg-gray-300 px-3 py-1 rounded-xl min-h-10 flex items-center gap-x-1 overflow-x-auto">
+    <div className="bg-gray-200 px-3 py-1 rounded-xl min-h-10 flex items-center gap-x-1 overflow-x-auto">
       {/* ----------------Tool bar Buttons implementation-------------------- */}
       {sections[0].map((button, buttonIndex) => (
         <ToolBarButton key={buttonIndex} {...button} />
