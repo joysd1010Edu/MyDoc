@@ -35,12 +35,46 @@ import {
 import { BsFilePdf } from "react-icons/bs";
 import { FaBold } from "react-icons/fa";
 import { useEditorState } from "@/Store/useEditorStore";
+import {
+  RiDeleteColumn,
+  RiDeleteRow,
+  RiInsertColumnLeft,
+  RiInsertColumnRight,
+} from "react-icons/ri";
+import {
+  AiOutlineInsertRowAbove,
+  AiOutlineInsertRowBelow,
+} from "react-icons/ai";
+
 import { useState } from "react";
 
 export const NavBar = () => {
   const { editor } = useEditorState();
   const [Rows, setRows] = useState(0);
   const [column, setCols] = useState(0);
+
+  const addRowAbove = () => {
+    editor?.chain().focus().addRowBefore().run();
+  };
+
+  const addRowBelow = () => {
+    editor?.chain().focus().addRowAfter().run();
+  };
+
+  const addColumnBefore = () => {
+    editor?.chain().focus().addColumnBefore().run();
+  };
+  const addColumnAfter = () => {
+    editor?.chain().focus().addColumnAfter().run();
+  };
+
+  const deleteColumn = () => {
+    editor?.chain().focus().deleteColumn().run();
+  };
+
+  const deleteRow = () => {
+    editor?.chain().focus().deleteRow().run();
+  };
 
   const insertTable = ({ rows, cols }: { rows: number; cols: number }) => {
     editor
@@ -187,6 +221,27 @@ export const NavBar = () => {
                       >
                         Insert Table
                       </button>
+                      <MenubarItem onClick={addColumnBefore}>
+                        <RiInsertColumnLeft />
+                        Add Column Left
+                      </MenubarItem>
+                      <MenubarItem onClick={addColumnAfter}>
+                        <RiInsertColumnRight />
+                        Add Column Right
+                      </MenubarItem>
+                      <MenubarItem onClick={addRowAbove}>
+                        <AiOutlineInsertRowAbove />
+                        Add Row Above
+                      </MenubarItem>
+                      <MenubarItem onClick={addRowBelow}>
+                        <AiOutlineInsertRowBelow /> Add Row Below
+                      </MenubarItem>
+                      <MenubarItem onClick={deleteColumn}>
+                        <RiDeleteColumn /> Remove Column
+                      </MenubarItem>
+                      <MenubarItem onClick={deleteRow}>
+                        <RiDeleteRow /> Remove Row
+                      </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
                 </MenubarContent>
@@ -204,30 +259,30 @@ export const NavBar = () => {
                       Text
                     </MenubarSubTrigger>
                     <MenubarSubContent>
-                      <MenubarItem>
+                      <MenubarItem onClick={()=>editor?.chain().focus().toggleBold().run()}>
                         <FaBold className=" size-4 mr-2" /> Bold{" "}
                         <MenubarShortcut className="  font-bold">
                           Ctrl + B
                         </MenubarShortcut>
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem onClick={()=>editor?.chain().focus().toggleItalic().run()}>
                         <ItalicIcon className=" size-4 mr-2" /> Italic{" "}
                         <MenubarShortcut className=" font-bold">
                           Ctrl + I
                         </MenubarShortcut>
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem  onClick={()=>editor?.chain().focus().toggleUnderline().run()}>
                         <UnderlineIcon className=" size-4 mr-2" /> Underline
                         &nbsp; &nbsp;{" "}
                         <MenubarShortcut className=" font-bold">
                           Ctrl + U
                         </MenubarShortcut>
                       </MenubarItem>
-                      <MenubarItem>
+                      <MenubarItem  onClick={()=>editor?.chain().focus().toggleStrike().run()}>
                         <Strikethrough className=" size-4 mr-2" /> Strikethrough
                       </MenubarItem>
                     </MenubarSubContent>
-                    <MenubarItem>
+                    <MenubarItem  onClick={()=>editor?.chain().focus().unsetAllMarks().run()}>
                       <RemoveFormatting className=" size-4 mr-2" />
                       Clear Formatting
                     </MenubarItem>
