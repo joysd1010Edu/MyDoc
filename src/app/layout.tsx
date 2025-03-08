@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+// import Inter from "next/font/google";
 import "./globals.css";
+import { sub } from "date-fns";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -13,10 +16,16 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+// const inter = Inter(
+//   {
+//     subsets:['latin']
+//   }
+// )
+
 export const metadata: Metadata = {
   title: "TextKumir",
-  description: "TextKumir – a powerful and modern online word editor designed for effortless writing, seamless collaboration, and productivity. Create, edit, and format documents with ease. Try TextKumir today!",
-  
+  description:
+    "TextKumir – a powerful and modern online word editor designed for effortless writing, seamless collaboration, and productivity. Create, edit, and format documents with ease. Try TextKumir today!",
 };
 
 export default function RootLayout({
@@ -27,9 +36,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased 
+         
+          `}
       >
+        <NuqsAdapter>
+
         {children}
+        </NuqsAdapter>
       </body>
     </html>
   );
