@@ -1,18 +1,27 @@
+"use client";
 import Link from "next/link";
 import Navbar from "./navbar";
 import Template_Gallary from "./Template_Gallary";
+import { usePaginatedQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import DocumentsTable from "./DocumentsTable";
 
 export default function Home() {
+  const {results,status,loadMore} = usePaginatedQuery(api.Document.GetDocs,{},{initialNumItems:10});
+  if(results===undefined){
+    return <div>Loading...</div>
+  }
   return (
     <div className=" min-h-screen flex flex-col ">
       <div className=" fixed top-0 left-0 right-0 z-10 bg-[#ffffff] h-16">
         <Navbar />
       </div>
       <div className=" mt-16">
-        <Template_Gallary/>
+        <Template_Gallary />
+      <DocumentsTable documents={results} loadMore={loadMore} status={status}/>
       </div>
-
-      click <Link href="/document/25683">here</Link> to go to document
+      
+     
     </div>
   );
 }

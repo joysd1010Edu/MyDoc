@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { sub } from "date-fns";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ConvexClientProvider } from "@/components/convex-client-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -15,12 +16,6 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
-
-// const inter = Inter(
-//   {
-//     subsets:['latin']
-//   }
-// )
 
 export const metadata: Metadata = {
   title: "TextKumir",
@@ -41,8 +36,7 @@ export default function RootLayout({
           `}
       >
         <NuqsAdapter>
-
-        {children}
+          <ConvexClientProvider>{children}</ConvexClientProvider>
         </NuqsAdapter>
       </body>
     </html>

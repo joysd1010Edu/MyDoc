@@ -8,21 +8,33 @@ import {
 } from "@/components/ui/carousel";
 import { templates } from "@/Constants/TemPlates";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-
-
+import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
+import { api } from "../../../convex/_generated/api";
+import { useState } from "react";
 
 const Template_Gallary = () => {
-  const isCreated = false;
+  const router = useRouter();
+  const create = useMutation(api.Document.createDoc);
+  const [isCreated, setIsCreated] = useState(false);
+  const onTemplateClick = async (title: string, initialContent: string) => {
+    setIsCreated(true);
+    create({ title, initialContent })
+      .then((documentId) => {
+        router.push(`/document/${documentId}`);
+      })
+      .finally(() => {
+        setIsCreated(false);
+      });
+  };
 
   return (
     <div className=" bg-[#f1f3f4] ">
       <div className=" max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-y-4">
         <h1 className=" text-base font-medium ">Start a new Document</h1>
         <Carousel>
-            <CarouselPrevious />
+          <CarouselPrevious />
           <CarouselContent>
-
             {templates.map((template) => (
               <CarouselItem
                 key={template.id}
@@ -36,7 +48,7 @@ const Template_Gallary = () => {
                 >
                   <button
                     disabled={isCreated}
-                    onClick={() => {}}
+                    onClick={() => onTemplateClick(template.label, "")}
                     style={{
                       backgroundImage: `url(${template.imageUrl})`,
                       backgroundSize: "cover",
@@ -60,3 +72,12 @@ const Template_Gallary = () => {
 };
 
 export default Template_Gallary;
+
+
+// function then(arg0: (documentId: any) => void) {
+//   throw new Error("Function not implemented.");
+// }
+
+// function setIsCreated(arg0: boolean) {
+//   throw new Error("Function not implemented.");
+// }
