@@ -27,3 +27,39 @@ export const GetDocs = query({
     return await ctx.db.query("documents").paginate(args.paginationOpts);
   },
 });
+
+export const removeDoc =mutation({
+  args:{id:v.id("documents")},
+  handler:async(ctx,args)=>{
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {      
+    throw new ConvexError("User is unauthorized");
+  }
+  const doc=await ctx.db.get(args.id);
+  if(!doc){
+    throw new ConvexError("Document not found");
+  }
+  if(doc.ownerId!==user.subject){
+    throw new ConvexError("User is unauthorized");
+  }
+  return await ctx.db.delete(args.id);
+}
+})
+export const UpdateDoc =mutation({
+  args:{id:v.id("documents"),title:v.string()}, 
+  handler:async(ctx,args)=>{
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {      
+    throw new ConvexError("User is unauthorized");
+  }
+  const doc=await ctx.db.get(args.id);
+  if(!doc){
+    throw new ConvexError("Document not found");
+  }
+  if(doc.ownerId!==user.subject){
+    throw new ConvexError("User is unauthorized");
+  }
+  return await ctx.db.patch(args.id,{title:args.title});
+}
+})
+
