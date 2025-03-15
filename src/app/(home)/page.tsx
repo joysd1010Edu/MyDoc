@@ -5,11 +5,15 @@ import Template_Gallary from "./Template_Gallary";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import DocumentsTable from "./DocumentsTable";
+import useSearchParam from "@/hooks/useSearchPara";
+import FullScreenLoader from "@/components/fullScreenLoader";
 
 export default function Home() {
-  const {results,status,loadMore} = usePaginatedQuery(api.Document.GetDocs,{},{initialNumItems:10});
+  const [search]=useSearchParam()
+  const {results,status,loadMore} = usePaginatedQuery(api.Document.GetDocs,{ search},{initialNumItems:10});
+  console.log(results);
   if(results===undefined){
-    return <div>Loading...</div>
+    return  <FullScreenLoader label="Data is Loading please wait...." />
   }
   return (
     <div className=" min-h-screen flex flex-col ">

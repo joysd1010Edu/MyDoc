@@ -2,9 +2,9 @@ import { parseAsString, useQueryState } from "nuqs";
 
 
 
-export default function useSearchParam(key: string) {
+export default function useSearchParam() {
   return useQueryState(
-    key,
+    "search",
     parseAsString.withDefault("").withOptions({
       clearOnDefault: true,
     })

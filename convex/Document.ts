@@ -22,44 +22,61 @@ export const createDoc = mutation({
 });
 
 export const GetDocs = query({
-  args: { paginationOpts: paginationOptsValidator },
-  handler: async (ctx,args) => {
-    return await ctx.db.query("documents").paginate(args.paginationOpts);
+  args: {
+    paginationOpts: paginationOptsValidator,
+    search: v.optional(v.string()),
+  },
+  handler: async (ctx, { search, paginationOpts }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("User is unauthorized");
+    }
+    if (search) {
+      return await ctx.db
+        .query("documents")
+        .withSearchIndex("search_title", (q) =>
+          q.search("title", search).eq("ownerId", user.subject)
+        )
+        .paginate(paginationOpts);
+    }
+    return await ctx.db
+      .query("documents")
+      .withIndex("by_owner_Id", (q) => q.eq("ownerId", user.subject))
+      .paginate(paginationOpts);
   },
 });
 
-export const removeDoc =mutation({
-  args:{id:v.id("documents")},
-  handler:async(ctx,args)=>{
+export const removeDoc = mutation({
+  args: { id: v.id("documents") },
+  handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
-    if (!user) {      
-    throw new ConvexError("User is unauthorized");
-  }
-  const doc=await ctx.db.get(args.id);
-  if(!doc){
-    throw new ConvexError("Document not found");
-  }
-  if(doc.ownerId!==user.subject){
-    throw new ConvexError("User is unauthorized");
-  }
-  return await ctx.db.delete(args.id);
-}
-})
-export const UpdateDoc =mutation({
-  args:{id:v.id("documents"),title:v.string()}, 
-  handler:async(ctx,args)=>{
+    if (!user) {
+      throw new ConvexError("User is unauthorized");
+    }
+    const doc = await ctx.db.get(args.id);
+    if (!doc) {
+      throw new ConvexError("Document not found");
+    }
+    if (doc.ownerId !== user.subject) {
+      throw new ConvexError("User is unauthorized");
+    }
+    return await ctx.db.delete(args.id);
+  },
+});
+export const UpdateDoc = mutation({
+  args: { id: v.id("documents"), title: v.string() },
+  handler: async (ctx, args) => {
     const user = await ctx.auth.getUserIdentity();
-    if (!user) {      
-    throw new ConvexError("User is unauthorized");
-  }
-  const doc=await ctx.db.get(args.id);
-  if(!doc){
-    throw new ConvexError("Document not found");
-  }
-  if(doc.ownerId!==user.subject){
-    throw new ConvexError("User is unauthorized");
-  }
-  return await ctx.db.patch(args.id,{title:args.title});
-}
-})
-
+    if (!user) {
+      throw new ConvexError("User is unauthorized");
+    }
+    const doc = await ctx.db.get(args.id);
+    if (!doc) {
+      throw new ConvexError("Document not found");
+    }
+    if (doc.ownerId !== user.subject) {
+      throw new ConvexError("User is unauthorized");
+    }
+    return await ctx.db.patch(args.id, { title: args.title });
+  },
+});

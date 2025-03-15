@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import FullScreenLoader from "@/components/fullScreenLoader";
 import DocumentRow from "./DocumentRow";
+import { Button } from "@/components/ui/button";
 
 interface DocumentsTableProps {
   documents: Doc<"documents">[] | undefined;
@@ -25,7 +26,7 @@ const DocumentsTable = ({
   return (
     <div className=" max-w-screen-xl mx-auto px-16 py-6 flex flex-col gap-5">
       {documents === undefined ? (
-        <FullScreenLoader label="Loading..." />
+        <FullScreenLoader label="Please wait, Loading..." />
       ) : (
         <Table>
           <TableHeader>
@@ -36,20 +37,34 @@ const DocumentsTable = ({
               <TableHead className="hidden md:table-cell">Created At</TableHead>
             </TableRow>
           </TableHeader>
-          {documents.length === 0 ? <TableBody>
-            <TableRow className=" hover:bg-transparent">
+          {documents.length === 0 ? (
+            <TableBody>
+              <TableRow className=" hover:bg-transparent">
                 <TableCell colSpan={4} className=" text-center">
-                    No documents found
+                  No documents found
                 </TableCell>
-
-                </TableRow>
-          </TableBody> : <TableBody>
-            {documents.map((doc) => (   
+              </TableRow>
+            </TableBody>
+          ) : (
+            <TableBody>
+              {documents.map((doc) => (
                 <DocumentRow key={doc._id} document={doc} />
-            ))}
-            </TableBody>}
+              ))}
+            </TableBody>
+          )}
         </Table>
       )}
+
+      <div className=" flex items-center justify-center">
+        <Button
+          variant={"ghost"}
+          size={"sm"}
+          onClick={() => loadMore(5)}
+          disabled={status !== "CanLoadMore"}
+        >
+          {status=='CanLoadMore'?'Load More':'No More Documents'}
+        </Button>
+      </div>
     </div>
   );
 };
