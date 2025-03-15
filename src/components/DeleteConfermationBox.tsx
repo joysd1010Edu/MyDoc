@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "convex/react";
+import { useMutation } from "convex/react"; 
 import { Id } from "../../convex/_generated/dataModel";
 import {
   AlertDialog,
@@ -15,6 +15,7 @@ import {
 } from "./ui/alert-dialog";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface DeleteConfermationBoxProps {
   documentId: Id<"documents">;
@@ -50,7 +51,7 @@ const DeleteConfermationBox = ({
             onClick={(e) => {
               e.stopPropagation();
               setIsRemoving(true);
-              Remove({ id: documentId }) .finally(() => setIsRemoving(false));
+              Remove({ id: documentId }).catch(()=>toast.error("Something went wrong")).then(()=>toast.success("Document Removed")) .finally(() => setIsRemoving(false));
             }}
           >
             Delete

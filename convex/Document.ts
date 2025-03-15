@@ -13,10 +13,15 @@ export const createDoc = mutation({
     if (!user) {
       throw new ConvexError("User is unauthorized");
     }
-    const documentId = await ctx.db.insert("documents", {
-      title: args.title ?? "Untitled",
-      initialContent: args.initialContent,
+    const organizationID = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+
+    return await ctx.db.insert("documents", {
+      title: args.title ?? "Untitled Document",
       ownerId: user.subject,
+      organizationId:organizationID,
+      initialContent: args.initialContent
     });
   },
 });
@@ -28,9 +33,24 @@ export const GetDocs = query({
   },
   handler: async (ctx, { search, paginationOpts }) => {
     const user = await ctx.auth.getUserIdentity();
+    // console.log(user)
+
     if (!user) {
       throw new ConvexError("User is unauthorized");
     }
+
+    const organizationID = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+    if (search && organizationID) {
+      return await ctx.db
+        .query("documents")
+        .withSearchIndex("search_title", (q) =>
+          q.search("title", search).eq("organizationId", organizationID)
+        )
+        .paginate(paginationOpts);
+    }
+
     if (search) {
       return await ctx.db
         .query("documents")
@@ -39,9 +59,20 @@ export const GetDocs = query({
         )
         .paginate(paginationOpts);
     }
+    if (organizationID) {
+      return await ctx.db
+        .query("documents")
+        .withIndex("by_organizationId", (q) =>
+          q.eq("organizationId", organizationID)
+        )
+        .order("desc")
+        .paginate(paginationOpts);
+    }
+
     return await ctx.db
       .query("documents")
       .withIndex("by_owner_Id", (q) => q.eq("ownerId", user.subject))
+      .order("desc")
       .paginate(paginationOpts);
   },
 });
