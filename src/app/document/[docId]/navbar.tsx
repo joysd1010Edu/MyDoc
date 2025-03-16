@@ -47,6 +47,7 @@ import {
 } from "react-icons/ai";
 
 import { useState } from "react";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 
 export const NavBar = () => {
   const { editor } = useEditorState();
@@ -354,6 +355,15 @@ export const NavBar = () => {
             </Menubar>
           </div>
         </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <OrganizationSwitcher
+        afterCreateOrganizationUrl="/"
+        afterLeaveOrganizationUrl="/"
+        afterSelectOrganizationUrl="/"
+        afterSelectPersonalUrl="/"
+        />
+        <UserButton />
       </div>
     </nav>
   );
