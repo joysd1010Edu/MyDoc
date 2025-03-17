@@ -33,6 +33,7 @@ import {
   Undo2Icon,
 } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
+import { Avatars } from "./avatar";
 import { FaBold } from "react-icons/fa";
 import { useEditorState } from "@/Store/useEditorStore";
 import {

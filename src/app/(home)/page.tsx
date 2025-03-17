@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import Navbar from "./navbar";
 import Template_Gallary from "./Template_Gallary";
 import { usePaginatedQuery } from "convex/react";
@@ -11,7 +10,7 @@ import FullScreenLoader from "@/components/fullScreenLoader";
 export default function Home() {
   const [search]=useSearchParam()
   const {results,status,loadMore} = usePaginatedQuery(api.Document.GetDocs,{ search},{initialNumItems:10});
-  console.log(results);
+  // console.log(results);
   if(results===undefined){
     return  <FullScreenLoader label="Data is Loading please wait...." />
   }
