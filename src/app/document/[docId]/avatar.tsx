@@ -7,13 +7,16 @@ import { Separator } from "@/components/ui/separator";
 const AvatarSize = 36;
 
 export const Avatars = () => {
-  return <ClientSideSuspense fallback={null}>
-    <AvatarStack />
-  </ClientSideSuspense>;
+  return (
+    <ClientSideSuspense fallback={null}>
+      <AvatarStack />
+    </ClientSideSuspense>
+  );
 };
 
 const AvatarStack = () => {
   const users = useOthers();
+  console.log(users)
   const currentUser = useSelf();
   if (users.length === 0) {
     return null;
@@ -35,7 +38,7 @@ const AvatarStack = () => {
           })}
         </div>
       </div>
-      <Separator orientation="vertical" className=" h-6"/>
+      <Separator orientation="vertical" className=" h-6" />
     </>
   );
 };
@@ -55,7 +58,7 @@ const Avatar = ({ src, name }: AvatarProps) => {
         {name}
       </div>
       <Image
-        width={60}
+        width={50}
         height={50}
         src={src}
         alt={name}

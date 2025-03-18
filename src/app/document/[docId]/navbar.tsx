@@ -49,6 +49,8 @@ import {
 
 import { useState } from "react";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Room } from "./room";
+import { Inbox } from "./inbox";
 
 export const NavBar = () => {
   const { editor } = useEditorState();
@@ -86,45 +88,43 @@ export const NavBar = () => {
       .run();
   };
 
-  const onDownload = (blob:Blob,filename:string) => {
+  const onDownload = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href=url;
+    a.href = url;
     a.download = filename;
     a.click();
-
-  }
-  const OnSaveJson=()=>{
-    if(!editor) return;
+  };
+  const OnSaveJson = () => {
+    if (!editor) return;
 
     const json = editor.getJSON();
-    const blob = new Blob([JSON.stringify(json)],{type:"application/json"});
-    onDownload(blob,"document.json");  // TODO: add document name.
-  }
+    const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
+    onDownload(blob, "document.json"); // TODO: add document name.
+  };
 
-  const OnSaveHtml=()=>{
-    if(!editor) return;
+  const OnSaveHtml = () => {
+    if (!editor) return;
 
     const html = editor.getHTML();
-    const blob = new Blob([html],{type:"text/html"});
-    onDownload(blob,"document.html");  // TODO: add document name.
-  }
+    const blob = new Blob([html], { type: "text/html" });
+    onDownload(blob, "document.html"); // TODO: add document name.
+  };
 
-  const OnSavePdf=()=>{
-    if(!editor) return;
+  const OnSavePdf = () => {
+    if (!editor) return;
 
-   window.print()
-  }
+    window.print();
+  };
 
-  const OnSaveDocx=()=>{
-    if(!editor) return;
+  const OnSaveDocx = () => {
+    if (!editor) return;
 
     const file = editor.getText();
-    const blob = new Blob([file],{type:"text/plain"});
-   
-    onDownload(blob,"document.docx");  // TODO: add document name.
-  }
+    const blob = new Blob([file], { type: "text/plain" });
 
+    onDownload(blob, "document.docx"); // TODO: add document name.
+  };
 
   return (
     <nav className=" flex items-center justify-between">
@@ -198,7 +198,9 @@ export const NavBar = () => {
                       Ctrl + Z
                     </MenubarShortcut>
                   </MenubarItem>
-                  <MenubarItem  onClick={() => editor?.chain().focus().redo().run()}>
+                  <MenubarItem
+                    onClick={() => editor?.chain().focus().redo().run()}
+                  >
                     <Redo2Icon className=" size-4 mr-2" />
                     Redo{" "}
                     <MenubarShortcut className=" font-bold">
@@ -358,11 +360,14 @@ export const NavBar = () => {
         </div>
       </div>
       <div className="flex items-center gap-3">
+      
+          <Avatars />
+          <Inbox/>
         <OrganizationSwitcher
-        afterCreateOrganizationUrl="/"
-        afterLeaveOrganizationUrl="/"
-        afterSelectOrganizationUrl="/"
-        afterSelectPersonalUrl="/"
+          afterCreateOrganizationUrl="/"
+          afterLeaveOrganizationUrl="/"
+          afterSelectOrganizationUrl="/"
+          afterSelectPersonalUrl="/"
         />
         <UserButton />
       </div>
