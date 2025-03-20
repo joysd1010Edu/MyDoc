@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/react";
 import "@tiptap/extension-text-style";
-import { parse } from "path";
-import { render } from "react-dom";
+// import { parse } from "path";
+// import { render } from "react-dom";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import DocumentInput from "./DocumentInput";
-import RenameDialogue from "@/components/RenameDialogue";
+// import RenameDialogue from "@/components/RenameDialogue";
 import DeleteConfermationBox from "@/components/DeleteConfermationBox";
 import {
   Menubar,
@@ -19,7 +19,7 @@ import {
 import {
   FileIcon,
   FileJsonIcon,
-  FilePenIcon,
+  
   FilePlusIcon,
   FileTextIcon,
   GlobeIcon,
@@ -49,14 +49,14 @@ import {
   AiOutlineInsertRowBelow,
 } from "react-icons/ai";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
-import { Room } from "./room";
+// import { Room } from "./room";
 import { Inbox } from "./inbox";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 

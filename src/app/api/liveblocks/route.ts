@@ -39,9 +39,15 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const name=user.fullName ?? user.primaryEmailAddress?.emailAddress?? "Anonymous"
+  const nameToNumber = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hue= Math.abs(nameToNumber) % 360;
+  const color=`hsl(${hue}, 100%, 50%)`;
+
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name: user.fullName ?? user.primaryEmailAddress?.emailAddress?? "Anonymous",
+      name: name,
+      color: color,
       avatar: user.imageUrl,
     },
   });

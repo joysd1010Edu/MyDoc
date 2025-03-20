@@ -6,7 +6,7 @@ interface fullScreenLoaderProps {
 }
 
 
-const FullScreenLoader = ({label,className}:fullScreenLoaderProps) => {
+const FullScreenLoader = ({label}:fullScreenLoaderProps) => {
     return (
         <div className=" flex flex-col justify-center  items-center min-h-screen gap-3">
             <LoaderIcon className=" size-6 text-muted-foreground animate-spin"/>

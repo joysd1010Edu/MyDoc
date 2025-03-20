@@ -13,6 +13,7 @@ const SearchInput = () => {
     setSearch(e.target.value);
     setValue(e.target.value);
   };
+  console.log(search);
   const handleClear = () => {
     setValue("");
     inputRef.current?.blur();

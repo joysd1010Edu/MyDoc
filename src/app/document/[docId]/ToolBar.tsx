@@ -7,14 +7,15 @@ import {
   AlignJustify,
   AlignLeftIcon,
   AlignRightIcon,
-  BarChartHorizontal,
+ 
   BoldIcon,
+ 
   ChevronDownIcon,
   HighlighterIcon,
   ImageIcon,
   ItalicIcon,
   Link2Icon,
-  ListCollapseIcon,
+  
   ListIcon,
   ListOrderedIcon,
   ListTodoIcon,
@@ -25,7 +26,7 @@ import {
   PrinterIcon,
   Redo2Icon,
   RemoveFormattingIcon,
-  SearchIcon,
+  
   SpellCheckIcon,
   UnderlineIcon,
   Undo2Icon,
@@ -49,7 +50,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TbLineHeight } from "react-icons/tb";
-import { FaBold } from "react-icons/fa";
+// import { FaBold } from "react-icons/fa";
 import { IconType } from "react-icons";
 import FullScreenLoader from "@/components/fullScreenLoader";
 
@@ -225,6 +226,7 @@ const ImageBtn = () => {
       setUrl("");
     } catch (err) {
       setError("Failed to load image. Please check the URL and try again.");
+      console.log(err)
     } finally {
       setIsLoading(false);
     }
@@ -743,7 +745,7 @@ const ToolBar = () => {
     [
       {
         label: "Bold",
-        icon: FaBold,
+        icon: BoldIcon,
         isActive: editor?.isActive("bold"),
         onclick: () => {
           editor?.chain().focus().toggleBold().run();
