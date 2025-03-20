@@ -21,7 +21,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
         <Authenticated> {children} </Authenticated>
         <AuthLoading>
-          <FullScreenLoader label="please wait...." />
+          <FullScreenLoader label="Authenticating please wait...." />
         </AuthLoading>
         <Unauthenticated>
           {" "}

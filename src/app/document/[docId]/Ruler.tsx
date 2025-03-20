@@ -1,11 +1,21 @@
+import { useMutation, useStorage } from "@liveblocks/react";
 import { useRef, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
 const Marker = Array.from({ length: 83 }, (_, i) => i);
 
 const Ruler = () => {
-  const [leftMargin, setLeftMargin] = useState(56);
-  const [rightMargin, setRightMargin] = useState(56);
+  const leftMargin = useStorage((root) => root.leftMargine) ?? 56;
+  const setLeftMargin = useMutation(({ storage }, position: number) => {
+    storage.set("leftMargine", position);
+  }, []);
+  const rightMargin = useStorage((root) => root.rightMargine) ?? 56;
+  const setRightMargin = useMutation(({ storage }, position: number) => {
+    storage.set("rightMargine", position);
+  }, []);
+
+  // const [leftMargin, setLeftMargin] = useState(56);
+  // const [rightMargin, setRightMargin] = useState(56);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
   const rulerRef = useRef<HTMLDivElement>(null);
@@ -61,10 +71,7 @@ const Ruler = () => {
       onMouseLeave={handleMouseUp}
       className="h-6 w-[816px] mx-auto border-b border-gray-300 flex items-end relative select-none print:hidden"
     >
-      <div
-        id="ruler-container"
-        className="w-full h-full relative"
-      >
+      <div id="ruler-container" className="w-full h-full relative">
         <MarkerCom
           position={leftMargin}
           isLeft={true}

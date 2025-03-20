@@ -51,6 +51,7 @@ import { Button } from "@/components/ui/button";
 import { TbLineHeight } from "react-icons/tb";
 import { FaBold } from "react-icons/fa";
 import { IconType } from "react-icons";
+import FullScreenLoader from "@/components/fullScreenLoader";
 
 interface ToolBarProps {
   onclick: () => void;
@@ -293,7 +294,7 @@ const ImageBtn = () => {
               disabled={isLoading}
               className="w-full"
             >
-              {isLoading ? "Loading..." : "Insert Image"}
+              {isLoading ? <FullScreenLoader label="Please wait...."/> : "Insert Image"}
             </Button>
           </div>
         </DropdownMenuContent>
@@ -769,9 +770,9 @@ const ToolBar = () => {
       {
         label: "Comment",
         icon: MessageSquarePlus,
-        isActive: false, //TODO: Add comment functionality
+        isActive: editor?.isActive("liveblocksCommentMark"), //TODO: Add comment functionality
         onclick: () => {
-          //TODO: Add comment functionality
+         editor?.chain().focus().addPendingComment().run();
         },
       },
       {

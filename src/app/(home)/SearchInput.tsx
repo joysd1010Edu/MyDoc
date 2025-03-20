@@ -6,10 +6,11 @@ import { SearchIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 const SearchInput = () => {
-    const [search, setSearch] = useSearchParam("Search");
+    const [search, setSearch] = useSearchParam();
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
     setValue(e.target.value);
   };
   const handleClear = () => {

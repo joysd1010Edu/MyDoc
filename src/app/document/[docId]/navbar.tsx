@@ -2,6 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import DocumentInput from "./DocumentInput";
+import RenameDialogue from "@/components/RenameDialogue";
+import DeleteConfermationBox from "@/components/DeleteConfermationBox";
 import {
   Menubar,
   MenubarContent,
@@ -33,6 +35,7 @@ import {
   Undo2Icon,
 } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
+import { Avatars } from "./avatar";
 import { FaBold } from "react-icons/fa";
 import { useEditorState } from "@/Store/useEditorStore";
 import {
@@ -46,9 +49,22 @@ import {
   AiOutlineInsertRowBelow,
 } from "react-icons/ai";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Room } from "./room";
+import { Inbox } from "./inbox";
+import { Doc } from "../../../../convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export const NavBar = () => {
+
+interface NavBarProps {
+  data: Doc<"documents">;
+}
+
+export const NavBar = ({data}:NavBarProps) => {
   const { editor } = useEditorState();
   const [Rows, setRows] = useState(0);
   const [column, setCols] = useState(0);
@@ -84,46 +100,58 @@ export const NavBar = () => {
       .run();
   };
 
-  const onDownload = (blob:Blob,filename:string) => {
+  const onDownload = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href=url;
+    a.href = url;
     a.download = filename;
     a.click();
-
-  }
-  const OnSaveJson=()=>{
-    if(!editor) return;
+  };
+  const OnSaveJson = () => {
+    if (!editor) return;
 
     const json = editor.getJSON();
-    const blob = new Blob([JSON.stringify(json)],{type:"application/json"});
-    onDownload(blob,"document.json");  // TODO: add document name.
-  }
+    const blob = new Blob([JSON.stringify(json)], { type: "application/json" });
+    onDownload(blob, `${data.title}.json`); 
+  };
 
-  const OnSaveHtml=()=>{
-    if(!editor) return;
+  const OnSaveHtml = () => {
+    if (!editor) return;
 
     const html = editor.getHTML();
-    const blob = new Blob([html],{type:"text/html"});
-    onDownload(blob,"document.html");  // TODO: add document name.
-  }
+    const blob = new Blob([html], { type: "text/html" });
+    onDownload(blob, `${data.title}.html`); 
+  };
 
-  const OnSavePdf=()=>{
-    if(!editor) return;
+  const OnSavePdf = () => {
+    if (!editor) return;
 
-   window.print()
-  }
+    window.print();
+  };
 
-  const OnSaveDocx=()=>{
-    if(!editor) return;
+  const OnSaveDocx = () => {
+    if (!editor) return;
 
     const file = editor.getText();
-    const blob = new Blob([file],{type:"text/plain"});
-   
-    onDownload(blob,"document.docx");  // TODO: add document name.
+    const blob = new Blob([file], { type: "text/plain" });
+
+    onDownload(blob, `${data.title}.docx`); 
+  };
+  const router = useRouter();
+  // const pathname = usePathname();
+  const mutation= useMutation(api.Document.createDoc)
+  const onNewDoc=()=>{
+    mutation({
+      title:"Untitled Document",
+      initialContent:""
+    }).catch(()=>{toast.error("Something went wrong, Failed to create document")})
+    .then((id)=>{
+      toast.success("Document Created");
+      router.push(`/document/${id}`)
+    })
   }
 
-
+  
   return (
     <nav className=" flex items-center justify-between">
       <div className=" flex gap-2 items-center">
@@ -132,7 +160,7 @@ export const NavBar = () => {
           <Image width={80} height={80} src="/APP.svg" alt="logo" />
         </Link>
         <div className="flex flex-col">
-          <DocumentInput />
+          <DocumentInput title={data.title} id={data._id}/>
           <div className="flex gap-2">
             <Menubar className="border-none bg-transparent shadow-none h-auto p-0">
               {/* ------------------------------------------------------File----------------------------------------------- */}
@@ -162,19 +190,24 @@ export const NavBar = () => {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarItem>
+                  <MenubarItem onClick={onNewDoc}>
                     <FilePlusIcon className=" size-4 mr-2" />
                     New Document
                   </MenubarItem>
                   <MenubarSeparator />
-                  <MenubarItem>
-                    <FilePenIcon className=" size-4 mr-2" />
-                    Rename
-                  </MenubarItem>
-                  <MenubarItem>
-                    <TrashIcon className=" size-4 mr-2" />
-                    Remove
-                  </MenubarItem>
+                 
+                  <DeleteConfermationBox documentId={data._id}>
+                    <MenubarItem
+                     onSelect={(e) =>{ e.preventDefault();
+                      
+                     }}
+                   
+                    >
+                      <TrashIcon className=" size-4 mr-2" />
+                      Remove
+                    </MenubarItem>
+                  </DeleteConfermationBox>
+                  
                   <MenubarItem onClick={() => window.print()}>
                     <PrinterIcon className=" size-4 mr-2" />
                     Print <MenubarShortcut>Ctrl + P</MenubarShortcut>
@@ -196,7 +229,9 @@ export const NavBar = () => {
                       Ctrl + Z
                     </MenubarShortcut>
                   </MenubarItem>
-                  <MenubarItem  onClick={() => editor?.chain().focus().redo().run()}>
+                  <MenubarItem
+                    onClick={() => editor?.chain().focus().redo().run()}
+                  >
                     <Redo2Icon className=" size-4 mr-2" />
                     Redo{" "}
                     <MenubarShortcut className=" font-bold">
@@ -354,6 +389,18 @@ export const NavBar = () => {
             </Menubar>
           </div>
         </div>
+      </div>
+      <div className="flex items-center gap-3">
+      
+          <Avatars />
+          <Inbox/>
+        <OrganizationSwitcher
+          afterCreateOrganizationUrl="/"
+          afterLeaveOrganizationUrl="/"
+          afterSelectOrganizationUrl="/"
+          afterSelectPersonalUrl="/"
+        />
+        <UserButton />
       </div>
     </nav>
   );

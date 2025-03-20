@@ -15,6 +15,8 @@ import {
 } from "./ui/alert-dialog";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface DeleteConfermationBoxProps {
   documentId: Id<"documents">;
@@ -27,7 +29,7 @@ const DeleteConfermationBox = ({
 }: DeleteConfermationBoxProps) => {
   const Remove = useMutation(api.Document.removeDoc);
   const [isRemoving, setIsRemoving] = useState(false);
-
+  const router = useRouter();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -50,7 +52,16 @@ const DeleteConfermationBox = ({
             onClick={(e) => {
               e.stopPropagation();
               setIsRemoving(true);
-              Remove({ id: documentId }) .finally(() => setIsRemoving(false));
+              Remove({ id: documentId })
+                .catch(() => toast.error("Something went wrong"))
+                .then(() => {toast.success("Document Removed")
+                  
+                })
+                .finally(() =>{ setIsRemoving(false); 
+                  setTimeout(() => {
+                    router.push("/");
+                  }, 100);
+                });
             }}
           >
             Delete

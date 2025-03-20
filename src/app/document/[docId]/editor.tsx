@@ -19,9 +19,16 @@ import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import { FontSize } from "@/extensions/Font-Size";
 import { LineHeight } from "@/extensions/lineHight";
+import { useStorage } from "@liveblocks/react";
+import { useLiveblocksExtension, FloatingToolbar } from "@liveblocks/react-tiptap";
+
 import Ruler from "./Ruler";
+import { Threads } from "./threads";
 
 const Editor = () => {
+  const leftMargin=useStorage((root)=>root.leftMargine);
+  const rightMargin=useStorage((root)=>root.rightMargine);
+  const liveblocks=useLiveblocksExtension();
   const { setEditor } = useEditorState();
   const editor = useEditor({
     immediatelyRender: false,
@@ -51,13 +58,16 @@ const Editor = () => {
     },
     editorProps: {
       attributes: {
-        style: "padding-left:56px; padding-right: 56px",
+        style: `padding-left:${leftMargin??56}px; padding-right: ${rightMargin??56}px`,
         class:
           "focus:outline-none print:border-0 bg-white border border-[#c7c7c7]  w-[816px] min-h-[1054px] flex flex-col py-10 pr-16 cursor-text",
       },
     },
     extensions: [
-      StarterKit,
+      liveblocks,
+      StarterKit.configure({
+        history: false,
+      }),
       FontSize,
       LineHeight.configure({
         types: ["heading", "paragraph"],
@@ -97,6 +107,7 @@ const Editor = () => {
       <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <EditorContent editor={editor} />
+        <Threads editor={editor}/>
       </div>
     </div>
   );
