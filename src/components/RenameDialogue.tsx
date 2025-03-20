@@ -4,8 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { toast } from "sonner";
 
 interface RenameDialogueProps {

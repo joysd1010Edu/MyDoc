@@ -1,4 +1,4 @@
-import { CloudIcon, LoaderIcon } from "lucide-react";
+import {  LoaderIcon } from "lucide-react";
 import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { useRef, useState } from "react";
@@ -6,7 +6,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useDebounce } from "@/hooks/useDebounce";
 import { toast } from "sonner";
-import { set } from "date-fns";
+// import { set } from "date-fns";
 import { useStatus } from "@liveblocks/react";
 
 interface DocumentInputProps {
