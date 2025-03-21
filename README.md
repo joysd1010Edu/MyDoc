@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 TextKumir - The Ultimate Collaborative Text Editor 🚀
 
-## Getting Started
+Welcome to **TextKumir**, a powerful **Next.js**-based text editor that offers seamless document editing, real-time collaboration, and multiple export formats! 🎯 Built with **Clerk, Convex, Liveblocks**, and more, TextKumir is designed for both individuals and teams to **edit, share, and collaborate** efficiently. ✨
 
-First, run the development server:
+## 🔥 Features
+
+- 🖊️ **Real-time collaborative editing** powered by **Liveblocks**
+- 🔐 **Authentication & user management** using **Clerk**
+- 🏢 **Organization & Team Feature** - Create teams, invite members, and collaborate 🤝
+- 🎨 **Rich text editing** with features like:
+  - Bold, Italic, Underline
+  - Text color customization 🌈
+  - Bullet lists & numbering ✅
+  - Headings, block quotes, code blocks 💻
+  - Table creation 📊
+- 📄 **Multiple export formats:**
+  - DOCX 📝
+  - PDF 📄
+  - JSON 🔢
+  - HTML 🌐
+- 🏗️ **Pre-built document templates** to get started quickly 🚀
+
+## 📦 Installation
+
+To set up TextKumir locally, follow these steps:
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/TextKumir.git
+
+# Navigate to the project directory
+cd TextKumir
+
+# Install dependencies
+npm install --legacy-peer-deps
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Deploy your TextKumir app easily using **Vercel**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 🛠️ Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework:** Next.js ⚛️
+- **Authentication:** Clerk 🔐
+- **Database & Backend:** Convex ⚡
+- **Real-time Collaboration:** Liveblocks 🏠
+- **UI Components:** Tailwind CSS 🎨, Radix UI 🖌️
+- **Text Editor:** Tiptap ✍️
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+We ❤️ contributions! If you’d like to contribute, please **fork the repo**, create a **new branch**, and submit a **pull request**. 😊
 
-## Deploy on Vercel
+```bash
+git checkout -b feature-branch
+git commit -m "Add awesome feature"
+git push origin feature-branch
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📜 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the **MIT License**. 📜
+
+---
+
+🔥 **TextKumir - Collaborate, Edit, and Share Smarter!** ✨
+
+🌐 Visit the live app: [TextKumir](https://textkumir.vercel.app) 🚀
+
+Happy coding! 🚀😃
+
