@@ -113,6 +113,7 @@ const Editor = ({ initialContent }: EditorProps) => {
       <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <EditorContent editor={editor} />
+        
         <Threads editor={editor} />
       </div>
     </div>

@@ -772,7 +772,7 @@ const ToolBar = () => {
       {
         label: "Comment",
         icon: MessageSquarePlus,
-        isActive: editor?.isActive("liveblocksCommentMark"), //TODO: Add comment functionality
+        isActive: editor?.isActive("liveblocksCommentMark"), 
         onclick: () => {
          editor?.chain().focus().addPendingComment().run();
         },
@@ -797,7 +797,7 @@ const ToolBar = () => {
   ];
 
   return (
-    <div className="bg-gray-200 px-3 py-1 rounded-xl min-h-10 flex items-center gap-x-1 overflow-x-auto">
+    <div className="bg-gray-200 print:hidden px-3 py-1 rounded-xl min-h-10 flex items-center gap-x-1 overflow-x-auto">
       {/* ----------------Tool bar Buttons implementation-------------------- */}
       {sections[0].map((button, buttonIndex) => (
         <ToolBarButton key={buttonIndex} {...button} />

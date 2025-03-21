@@ -17,13 +17,13 @@ export function ThreadList({ editor }: { editor: Editor | null }) {
 
   return (
     <>
-      <div className="anchored-threads">
-        <AnchoredThreads editor={editor} threads={threads} />
+      <div className="anchored-threads print:hidden">
+        <AnchoredThreads className="" editor={editor} threads={threads} />
       </div>
       <FloatingThreads
         editor={editor}
         threads={threads}
-        className="floating-threads"
+        className="floating-threads print:hidden"
       />
       <FloatingComposer editor={editor} className="floating-composer" />
     </>

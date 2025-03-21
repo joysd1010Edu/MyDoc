@@ -6,6 +6,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -272,6 +273,7 @@ body {
 /* For desktop */
 .anchored-threads {
   display: block;
+  
   max-width: 300px;
   width: 100%;
   position: absolute;
@@ -290,4 +292,43 @@ body {
 
 div[data-radix-popper-content-wrapper]{
   z-index: 50 !important;
+}
+
+@media print {
+  @page {
+    margin: 0;
+    padding: 0;
+    size: auto;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Remove default headers and footers */
+  @page :first {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* Remove any spacing from the editor container */
+  .EditorContent {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  /* Hide URL from Firefox */
+  @-moz-document url-prefix() {
+    body:after {
+      content: "";
+      display: none;
+    }
+  }
+
+  /* Reset any potential spacing from container elements */
+  div {
+    margin-top: 0;
+    padding-top: 0;
+  }
 }
